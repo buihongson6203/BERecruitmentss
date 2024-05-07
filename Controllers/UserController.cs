@@ -14,6 +14,7 @@ namespace BERecruitmentss.Controllers
         public UserController(IBaseRepository<Users> repository, IUserRepository userlRepository) : base(repository)
         {
             _userRepository = userlRepository;
+            return 0;
         }
     }
 }
