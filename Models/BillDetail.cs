@@ -8,7 +8,6 @@ namespace BERecruitmentss.Models
         public int? ProductId { get; set; }
         public decimal? Price { get; set;}
         public int? Quantity { get; set; }
-
         [ForeignKey("BillId")]
         public virtual Bill? Bill { get; set; }
         [ForeignKey("ProductId")]
