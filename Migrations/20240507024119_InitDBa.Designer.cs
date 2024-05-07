@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BERecruitmentss.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240506073748_create_naa")]
-    partial class create_naa
+    [Migration("20240507024119_InitDBa")]
+    partial class InitDBa
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

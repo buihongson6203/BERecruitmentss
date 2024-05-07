@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BERecruitmentss.Migrations
 {
     /// <inheritdoc />
-    public partial class create_naa : Migration
+    public partial class InitDBa : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -183,6 +183,7 @@ namespace BERecruitmentss.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
             migrationBuilder.CreateTable(
                 name: "AspNetUserRoles",
                 columns: table => new
@@ -206,6 +207,7 @@ namespace BERecruitmentss.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
             migrationBuilder.CreateTable(
                 name: "AspNetUserTokens",
                 columns: table => new
