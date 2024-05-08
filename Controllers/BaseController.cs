@@ -13,17 +13,13 @@ namespace BERecruitmentss.Controllers
     public class BaseController<T> : ControllerBase where T : Base
     {
         private IBaseRepository<T> _repository;
-        private IBaseRepository<Bill> repository;
+
 
         public BaseController(IBaseRepository<T> repository)
         {
             _repository = repository;
         }
 
-        public BaseController(IBaseRepository<Bill> repository)
-        {
-            this.repository = repository;
-        }
 
         // [Authorize(Roles = "ADMIN,SUBADMIN,CUSTOMER")]
         [HttpGet]

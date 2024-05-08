@@ -22,16 +22,16 @@ namespace BERecruitmentss
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
             builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
-            builder.Services.AddScoped<IProductRepository, ProductRepository>();
-            builder.Services.AddScoped<IBillRepository, BillRepository>();
-            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            //builder.Services.AddScoped<IProductRepository, ProductRepository>();
+            //builder.Services.AddScoped<IBillRepository, BillRepository>();
+            //builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Tên API của bạn", Version = "v1" });
             });
 
             var app = builder.Build();
-
+          
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {

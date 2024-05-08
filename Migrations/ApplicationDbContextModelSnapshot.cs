@@ -22,7 +22,7 @@ namespace BERecruitmentss.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("BERecruitmentss.Models.Bill", b =>
+            modelBuilder.Entity("BERecruitmentss.Models.Candidate", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -30,10 +30,10 @@ namespace BERecruitmentss.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Code")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("CandidateCode")
+                        .HasColumnType("int");
 
-                    b.Property<DateTime?>("Date")
+                    b.Property<DateTime?>("DateCreated")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("DeletedAt")
@@ -48,7 +48,7 @@ namespace BERecruitmentss.Migrations
                     b.Property<bool?>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<string>("PhoneNumber")
+                    b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("StartedBy")
@@ -56,6 +56,9 @@ namespace BERecruitmentss.Migrations
 
                     b.Property<DateTime?>("StartedDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("Status")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -65,10 +68,14 @@ namespace BERecruitmentss.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Bills");
+                    b.HasIndex("CandidateCode")
+                        .IsUnique()
+                        .HasFilter("[CandidateCode] IS NOT NULL");
+
+                    b.ToTable("Candidate");
                 });
 
-            modelBuilder.Entity("BERecruitmentss.Models.BillDetail", b =>
+            modelBuilder.Entity("BERecruitmentss.Models.RecruitmentApplicant", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -76,8 +83,11 @@ namespace BERecruitmentss.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("BillId")
+                    b.Property<int?>("CandidateId")
                         .HasColumnType("int");
+
+                    b.Property<DateTime?>("DateStart")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
@@ -85,19 +95,16 @@ namespace BERecruitmentss.Migrations
                     b.Property<string>("DeletedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime?>("EndedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<bool?>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<decimal?>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int?>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("Quantity")
+                    b.Property<int?>("RecruitmentID")
                         .HasColumnType("int");
 
                     b.Property<string>("StartedBy")
@@ -105,6 +112,9 @@ namespace BERecruitmentss.Migrations
 
                     b.Property<DateTime?>("StartedDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("Status")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -114,14 +124,14 @@ namespace BERecruitmentss.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BillId");
+                    b.HasIndex("CandidateId");
 
-                    b.HasIndex("ProductId");
+                    b.HasIndex("RecruitmentID");
 
-                    b.ToTable("BillDetails");
+                    b.ToTable("RecruitmentApplicant");
                 });
 
-            modelBuilder.Entity("BERecruitmentss.Models.Product", b =>
+            modelBuilder.Entity("BERecruitmentss.Models.Staff", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -129,28 +139,34 @@ namespace BERecruitmentss.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("BarCode")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DeletedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int?>("EmployeeCode")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("EndedDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("ImageProduct")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool?>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<decimal?>("Price")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ProductName")
+                    b.Property<int?>("Role")
+                        .HasColumnType("int");
+
+                    b.Property<string>("StaffName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("StartedBy")
@@ -167,7 +183,14 @@ namespace BERecruitmentss.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Products");
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.HasIndex("EmployeeCode")
+                        .IsUnique()
+                        .HasFilter("[EmployeeCode] IS NOT NULL");
+
+                    b.ToTable("Staff");
                 });
 
             modelBuilder.Entity("BERecruitmentss.Models.Users", b =>
@@ -220,6 +243,73 @@ namespace BERecruitmentss.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("BERecruitmentss.Models.Vacancies", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("Department")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("EndedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool?>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("RecruitmentClosingDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("RecruitmentCode")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("StaffID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("StartedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("StartedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RecruitmentCode")
+                        .IsUnique()
+                        .HasFilter("[RecruitmentCode] IS NOT NULL");
+
+                    b.HasIndex("StaffID");
+
+                    b.ToTable("Vacancies");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -424,19 +514,28 @@ namespace BERecruitmentss.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("BERecruitmentss.Models.BillDetail", b =>
+            modelBuilder.Entity("BERecruitmentss.Models.RecruitmentApplicant", b =>
                 {
-                    b.HasOne("BERecruitmentss.Models.Bill", "Bill")
-                        .WithMany()
-                        .HasForeignKey("BillId");
+                    b.HasOne("BERecruitmentss.Models.Candidate", "Candidate")
+                        .WithMany("RecruitmentApplicant")
+                        .HasForeignKey("CandidateId");
 
-                    b.HasOne("BERecruitmentss.Models.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId");
+                    b.HasOne("BERecruitmentss.Models.Vacancies", "Vacancies")
+                        .WithMany("RecruitmentApplicant")
+                        .HasForeignKey("RecruitmentID");
 
-                    b.Navigation("Bill");
+                    b.Navigation("Candidate");
 
-                    b.Navigation("Product");
+                    b.Navigation("Vacancies");
+                });
+
+            modelBuilder.Entity("BERecruitmentss.Models.Vacancies", b =>
+                {
+                    b.HasOne("BERecruitmentss.Models.Staff", "Staff")
+                        .WithMany("Vacancies")
+                        .HasForeignKey("StaffID");
+
+                    b.Navigation("Staff");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -488,6 +587,21 @@ namespace BERecruitmentss.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("BERecruitmentss.Models.Candidate", b =>
+                {
+                    b.Navigation("RecruitmentApplicant");
+                });
+
+            modelBuilder.Entity("BERecruitmentss.Models.Staff", b =>
+                {
+                    b.Navigation("Vacancies");
+                });
+
+            modelBuilder.Entity("BERecruitmentss.Models.Vacancies", b =>
+                {
+                    b.Navigation("RecruitmentApplicant");
                 });
 #pragma warning restore 612, 618
         }

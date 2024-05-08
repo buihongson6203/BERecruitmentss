@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BERecruitmentss.Migrations
 {
     /// <inheritdoc />
-    public partial class InitDBa : Migration
+    public partial class createDb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -51,14 +51,15 @@ namespace BERecruitmentss.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Bills",
+                name: "Candidate",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Code = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Date = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CandidateCode = table.Column<int>(type: "int", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: true),
                     StartedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     StartedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     EndedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -70,19 +71,20 @@ namespace BERecruitmentss.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Bills", x => x.Id);
+                    table.PrimaryKey("PK_Candidate", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Products",
+                name: "Staff",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ProductName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
-                    ImageProduct = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    BarCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    EmployeeCode = table.Column<int>(type: "int", nullable: true),
+                    StaffName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Role = table.Column<int>(type: "int", nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     StartedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     StartedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     EndedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -94,7 +96,7 @@ namespace BERecruitmentss.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Products", x => x.Id);
+                    table.PrimaryKey("PK_Staff", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -229,15 +231,19 @@ namespace BERecruitmentss.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "BillDetails",
+                name: "Vacancies",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    BillId = table.Column<int>(type: "int", nullable: true),
-                    ProductId = table.Column<int>(type: "int", nullable: true),
-                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    RecruitmentCode = table.Column<int>(type: "int", nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: true),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Quantity = table.Column<int>(type: "int", nullable: true),
+                    Department = table.Column<int>(type: "int", nullable: true),
+                    RecruitmentClosingDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    StaffID = table.Column<int>(type: "int", nullable: true),
                     StartedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     StartedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     EndedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -249,16 +255,46 @@ namespace BERecruitmentss.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BillDetails", x => x.Id);
+                    table.PrimaryKey("PK_Vacancies", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_BillDetails_Bills_BillId",
-                        column: x => x.BillId,
-                        principalTable: "Bills",
+                        name: "FK_Vacancies_Staff_StaffID",
+                        column: x => x.StaffID,
+                        principalTable: "Staff",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RecruitmentApplicant",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    DateStart = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: true),
+                    CandidateId = table.Column<int>(type: "int", nullable: true),
+                    RecruitmentID = table.Column<int>(type: "int", nullable: true),
+                    StartedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    StartedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    EndedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: true),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DeletedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RecruitmentApplicant", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RecruitmentApplicant_Candidate_CandidateId",
+                        column: x => x.CandidateId,
+                        principalTable: "Candidate",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_BillDetails_Products_ProductId",
-                        column: x => x.ProductId,
-                        principalTable: "Products",
+                        name: "FK_RecruitmentApplicant_Vacancies_RecruitmentID",
+                        column: x => x.RecruitmentID,
+                        principalTable: "Vacancies",
                         principalColumn: "Id");
                 });
 
@@ -302,14 +338,46 @@ namespace BERecruitmentss.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BillDetails_BillId",
-                table: "BillDetails",
-                column: "BillId");
+                name: "IX_Candidate_CandidateCode",
+                table: "Candidate",
+                column: "CandidateCode",
+                unique: true,
+                filter: "[CandidateCode] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BillDetails_ProductId",
-                table: "BillDetails",
-                column: "ProductId");
+                name: "IX_RecruitmentApplicant_CandidateId",
+                table: "RecruitmentApplicant",
+                column: "CandidateId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RecruitmentApplicant_RecruitmentID",
+                table: "RecruitmentApplicant",
+                column: "RecruitmentID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Staff_Email",
+                table: "Staff",
+                column: "Email",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Staff_EmployeeCode",
+                table: "Staff",
+                column: "EmployeeCode",
+                unique: true,
+                filter: "[EmployeeCode] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Vacancies_RecruitmentCode",
+                table: "Vacancies",
+                column: "RecruitmentCode",
+                unique: true,
+                filter: "[RecruitmentCode] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Vacancies_StaffID",
+                table: "Vacancies",
+                column: "StaffID");
         }
 
         /// <inheritdoc />
@@ -331,7 +399,7 @@ namespace BERecruitmentss.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "BillDetails");
+                name: "RecruitmentApplicant");
 
             migrationBuilder.DropTable(
                 name: "Users");
@@ -343,10 +411,13 @@ namespace BERecruitmentss.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "Bills");
+                name: "Candidate");
 
             migrationBuilder.DropTable(
-                name: "Products");
+                name: "Vacancies");
+
+            migrationBuilder.DropTable(
+                name: "Staff");
         }
     }
 }
