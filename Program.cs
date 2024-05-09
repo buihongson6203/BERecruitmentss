@@ -24,7 +24,9 @@ namespace BERecruitmentss
             builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
             //builder.Services.AddScoped<IProductRepository, ProductRepository>();
             //builder.Services.AddScoped<IBillRepository, BillRepository>();
-            //builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IStaffRepository, StaffRepository>();
+            builder.Services.AddScoped<ICandidateRepository, CandidateRepository>();
             builder.Services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Tên API của bạn", Version = "v1" });
