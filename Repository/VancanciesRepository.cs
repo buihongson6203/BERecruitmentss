@@ -7,7 +7,8 @@ namespace BERecruitmentss.Repository
     {
 
     }
-    public class VancanciesRepository : BaseRepository<Vacancies>
+
+    public class VancanciesRepository : BaseRepository<Vacancies>, IVancanciesRepository
     {
         public VancanciesRepository(ApplicationDbContext context, IHttpContextAccessor httpContextAccessor) : base(context, httpContextAccessor)
         {

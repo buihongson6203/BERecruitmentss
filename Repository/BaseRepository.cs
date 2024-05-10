@@ -48,14 +48,12 @@ namespace BERecruitmentss.Repository
                 entity.StartedDate = DateTime.Now;
                 entity.StartedBy = GetCurrentUserId();
                 entity.EndedDate = DateTime.Now;
-
                 _dbSet.Add(entity);
                 await _context.SaveChangesAsync();
                 return entity;
             }
             return null;
         }
-
         public async Task<T> Delete(int id)
         {
             var result = await _dbSet.FindAsync(id);

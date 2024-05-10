@@ -10,7 +10,6 @@ namespace BERecruitmentss.Models
         public string StaffName { get; set; }
         public string Password { get; set; }
         public int? Role { get; set; }
-
         [Required]
         [EmailAddress]
         public string Email { get; set; }

@@ -24,8 +24,12 @@ namespace BERecruitmentss
             builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
             //builder.Services.AddScoped<IProductRepository, ProductRepository>();
             //builder.Services.AddScoped<IBillRepository, BillRepository>();
+            
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IStaffRepository, StaffRepository>();
+            builder.Services.AddScoped<IVancanciesRepository, VancanciesRepository>();
+            builder.Services.AddScoped<IRecruitmentApplicantRepository, RecruitmentApplicantRepository>();
+
             builder.Services.AddScoped<ICandidateRepository, CandidateRepository>();
             builder.Services.AddSwaggerGen(c =>
             {
