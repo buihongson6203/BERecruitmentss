@@ -30,8 +30,8 @@ namespace BERecruitmentss.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("CandidateCode")
-                        .HasColumnType("int");
+                    b.Property<string>("CandidateCode")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("DateCreated")
                         .HasColumnType("datetime2");
@@ -149,8 +149,8 @@ namespace BERecruitmentss.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int?>("EmployeeCode")
-                        .HasColumnType("int");
+                    b.Property<string>("EmployeeCode")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("EndedDate")
                         .HasColumnType("datetime2");
@@ -204,6 +204,9 @@ namespace BERecruitmentss.Migrations
                     b.Property<string>("Address")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Code")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
@@ -221,9 +224,6 @@ namespace BERecruitmentss.Migrations
 
                     b.Property<bool?>("IsDeleted")
                         .HasColumnType("bit");
-
-                    b.Property<string>("Phone")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("Role")
                         .HasColumnType("int");
@@ -277,8 +277,8 @@ namespace BERecruitmentss.Migrations
                     b.Property<DateTime?>("RecruitmentClosingDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("RecruitmentCode")
-                        .HasColumnType("int");
+                    b.Property<string>("RecruitmentCode")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int?>("StaffID")
                         .HasColumnType("int");

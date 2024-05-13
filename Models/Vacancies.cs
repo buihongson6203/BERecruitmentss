@@ -5,7 +5,7 @@ namespace BERecruitmentss.Models
 {
     public class Vacancies:Base
     {
-        public int? RecruitmentCode { get; set; }
+        public string? RecruitmentCode { get; set; }
         public int? Status { get; set; }
         public string? Title { get; set; }
         public string? Description { get; set; }

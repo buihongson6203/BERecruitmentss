@@ -14,7 +14,6 @@ namespace BERecruitmentss.Controllers
     {
         private IBaseRepository<T> _repository;
 
-
         public BaseController(IBaseRepository<T> repository)
         {
             _repository = repository;
@@ -30,7 +29,6 @@ namespace BERecruitmentss.Controllers
             var result = await _repository.GetAllNoPagAndFilter();
             return Ok(result);
         }
-
         [HttpPost]
         // [Authorize(Roles = "ADMIN,SUBADMIN,CUSTOMER")]
         [Route("fullFilter")]

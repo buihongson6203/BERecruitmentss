@@ -17,6 +17,7 @@ namespace BERecruitmentss.Data
         public virtual DbSet<RecruitmentApplicant> RecruitmentApplicant { get; set; }
         public virtual DbSet<Candidate> Candidate { get; set; }
         public virtual DbSet<Users> Users { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -32,31 +33,32 @@ namespace BERecruitmentss.Data
             modelBuilder.Entity<Vacancies>()
                .HasIndex(s => s.RecruitmentCode)
                .IsUnique();
+
         }
         private async void SeedData()
         {
-            if (this.Users.Count() <= 0)
-            {
-                var u1 = new Users() { Phone = "123456789", Dob = new DateTime(1990, 5, 15), Email = "user1@example.com", Address = "123 Street, City", Role = 1 };
-                var u2 = new Users() { Phone = "987654321", Dob = new DateTime(1985, 10, 20), Email = "user2@example.com", Address = "456 Road, Town", Role = 2 };
-                var u3 = new Users() { Phone = "456789123", Dob = new DateTime(1995, 3, 25), Email = "user3@example.com", Address = "789 Avenue, Village", Role = 3 };
-                var u4 = new Users() { Phone = "321654987", Dob = new DateTime(1980, 7, 10), Email = "user4@example.com", Address = "987 Lane, District", Role = 1 };
-                var u5 = new Users() { Phone = "654321789", Dob = new DateTime(1992, 11, 30), Email = "user5@example.com", Address = "246 Boulevard, County", Role = 2 };
-                this.Users.Add(u1);
-                this.Users.Add(u2);
-                this.Users.Add(u3);
-                this.Users.Add(u4);
-                this.Users.Add(u5);
+            //if (this.Users.Count() <= 0)
+            //{
+            //    var u1 = new Users() { Phone = "123456789", Dob = new DateTime(1990, 5, 15), Email = "user1@example.com", Address = "123 Street, City", Role = 1 };
+            //    var u2 = new Users() { Phone = "987654321", Dob = new DateTime(1985, 10, 20), Email = "user2@example.com", Address = "456 Road, Town", Role = 2 };
+            //    var u3 = new Users() { Phone = "456789123", Dob = new DateTime(1995, 3, 25), Email = "user3@example.com", Address = "789 Avenue, Village", Role = 3 };
+            //    var u4 = new Users() { Phone = "321654987", Dob = new DateTime(1980, 7, 10), Email = "user4@example.com", Address = "987 Lane, District", Role = 1 };
+            //    var u5 = new Users() { Phone = "654321789", Dob = new DateTime(1992, 11, 30), Email = "user5@example.com", Address = "246 Boulevard, County", Role = 2 };
+            //    this.Users.Add(u1);
+            //    this.Users.Add(u2);
+            //    this.Users.Add(u3);
+            //    this.Users.Add(u4);
+            //    this.Users.Add(u5);
 
-                this.SaveChanges();
-            }
+            //    this.SaveChanges();
+            //}
             if (this.Staff.Count() <= 0)
             {
-                var s1 = new Staff() { EmployeeCode = 1001, StaffName = "John Doe", Password = "password123", Role = 1, Email = "john@example.com" };
-                var s2 = new Staff() { EmployeeCode = 1002, StaffName = "Jane Smith", Password = "password456", Role = 2, Email = "jane@example.com" };
-                var s3 = new Staff() { EmployeeCode = 1003, StaffName = "Alice Johnson", Password = "password789", Role = 3, Email = "alice@example.com" };
-                var s4 = new Staff() { EmployeeCode = 1004, StaffName = "Bob Brown", Password = "passwordabc", Role = 1, Email = "bob@example.com" };
-                var s5 = new Staff() { EmployeeCode = 1005, StaffName = "Eva Martinez", Password = "passworddef", Role = 2, Email = "eva@example.com" };
+                var s1 = new Staff() { EmployeeCode = "V1001", StaffName = "son123", Password = "123456", Role = 1, Email = "son.bh.2216@aptechlearning.edu.vn" };
+                var s2 = new Staff() { EmployeeCode = "V1002", StaffName = "Jane Smith", Password = "password456", Role = 2, Email = "jane@example.com" };
+                var s3 = new Staff() { EmployeeCode = "V1003", StaffName = "Alice Johnson", Password = "password789", Role = 3, Email = "alice@example.com" };
+                var s4 = new Staff() { EmployeeCode = "V1004", StaffName = "Bob Brown", Password = "passwordabc", Role = 1, Email = "bob@example.com" };
+                var s5 = new Staff() { EmployeeCode = "V1005", StaffName = "Eva Martinez", Password = "passworddef", Role = 2, Email = "eva@example.com" };
 
                 this.Staff.Add(s1);
                 this.Staff.Add(s2);
@@ -68,11 +70,11 @@ namespace BERecruitmentss.Data
             }
             if (this.Vacancies.Count() <= 0)
             {
-                var v1 = new Vacancies() { RecruitmentCode = 10001, Status = 1, Title = "Software Engineer", Description = "Join our development team", Quantity = 5, Department = 1, RecruitmentClosingDate = new DateTime(2024, 6, 30), StaffID = 1 };
-                var v2 = new Vacancies() { RecruitmentCode = 10002, Status = 2, Title = "Marketing Manager", Description = "Lead our marketing efforts", Quantity = 2, Department = 2, RecruitmentClosingDate = new DateTime(2024, 7, 15), StaffID = 2 };
-                var v3 = new Vacancies() { RecruitmentCode = 10003, Status = 1, Title = "Data Analyst", Description = "Analyze and interpret data", Quantity = 3, Department = 3, RecruitmentClosingDate = new DateTime(2024, 7, 31), StaffID = 3 };
-                var v4 = new Vacancies() { RecruitmentCode = 10004, Status = 2, Title = "HR Coordinator", Description = "Manage human resource activities", Quantity = 1, Department = 4, RecruitmentClosingDate = new DateTime(2024, 8, 15), StaffID = 4 };
-                var v5 = new Vacancies() { RecruitmentCode = 10005, Status = 1, Title = "Sales Representative", Description = "Promote and sell our products", Quantity = 4, Department = 5, RecruitmentClosingDate = new DateTime(2024, 8, 31), StaffID = 5 };
+                var v1 = new Vacancies() { RecruitmentCode = "A1101", Status = 1, Title = "Software Engineer", Description = "Join our development team", Quantity = 5, Department = 1, RecruitmentClosingDate = new DateTime(2024, 6, 30), StaffID = 1 };
+                var v2 = new Vacancies() { RecruitmentCode = "A1102", Status = 2, Title = "Marketing Manager", Description = "Lead our marketing efforts", Quantity = 2, Department = 2, RecruitmentClosingDate = new DateTime(2024, 7, 15), StaffID = 2 };
+                var v3 = new Vacancies() { RecruitmentCode = "A1103", Status = 1, Title = "Data Analyst", Description = "Analyze and interpret data", Quantity = 3, Department = 3, RecruitmentClosingDate = new DateTime(2024, 7, 31), StaffID = 3 };
+                var v4 = new Vacancies() { RecruitmentCode = "A1104", Status = 2, Title = "HR Coordinator", Description = "Manage human resource activities", Quantity = 1, Department = 4, RecruitmentClosingDate = new DateTime(2024, 8, 15), StaffID = 4 };
+                var v5 = new Vacancies() { RecruitmentCode = "A1105", Status = 1, Title = "Sales Representative", Description = "Promote and sell our products", Quantity = 4, Department = 5, RecruitmentClosingDate = new DateTime(2024, 8, 31), StaffID = 5 };
 
                 this.Vacancies.Add(v1);
                 this.Vacancies.Add(v2);
@@ -84,11 +86,11 @@ namespace BERecruitmentss.Data
             }
             if (this.Candidate.Count() <= 0)
             {
-                var c1 = new Candidate() { CandidateCode = 1, Name = "Candidate 1", DateCreated = new DateTime(1990, 5, 15), Status = 1 };
-                var c2 = new Candidate() { CandidateCode = 2, Name = "Candidate 2", DateCreated = new DateTime(1985, 10, 20), Status = 2 };
-                var c3 = new Candidate() { CandidateCode = 3, Name = "Candidate 3", DateCreated = new DateTime(1995, 3, 25), Status = 1 };
-                var c4 = new Candidate() { CandidateCode = 4, Name = "Candidate 4", DateCreated = new DateTime(1980, 7, 10), Status = 2 };
-                var c5 = new Candidate() { CandidateCode = 5, Name = "Candidate 5", DateCreated = new DateTime(1992, 11, 30), Status = 1 };
+                var c1 = new Candidate() { CandidateCode = "C1001", Name = "Candidate 1", DateCreated = new DateTime(1990, 5, 15), Status = 1 };
+                var c2 = new Candidate() { CandidateCode = "C1002", Name = "Candidate 2", DateCreated = new DateTime(1985, 10, 20), Status = 2 };
+                var c3 = new Candidate() { CandidateCode = "C1003", Name = "Candidate 3", DateCreated = new DateTime(1995, 3, 25), Status = 1 };
+                var c4 = new Candidate() { CandidateCode = "C1004", Name = "Candidate 4", DateCreated = new DateTime(1980, 7, 10), Status = 2 };
+                var c5 = new Candidate() { CandidateCode = "C1005", Name = "Candidate 5", DateCreated = new DateTime(1992, 11, 30), Status = 1 };
                 this.Candidate.Add(c1);
                 this.Candidate.Add(c2);
                 this.Candidate.Add(c3);
