@@ -15,6 +15,8 @@ namespace BERecruitmentss.Repository
 {
     public interface IBaseRepository<T> where T : Base
     {
+      
+
         Task<List<T>> GetAll(int index = 1, int size = 1);
         Task<List<T>> GetAllNoPagAndFilter();
         Task<T> GetById(int id);

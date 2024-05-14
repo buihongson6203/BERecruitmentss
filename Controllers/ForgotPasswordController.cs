@@ -1,9 +1,15 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using BERecruitmentss.Repository;
+using BERecruitmentss.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using BERecruitmentss.Services;
 using System;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
+using BERecruitmentss.Models;
+using BERecruitmentss.Repository;
+using BERecruitmentss.Services;
 
 namespace BERecruitmentss.Controllers
 {
@@ -12,11 +18,11 @@ namespace BERecruitmentss.Controllers
     public class ForgotPasswordController : ControllerBase
     {
         private readonly IEmailService _emailService;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly IEmailRepository _emailRepository;
 
-        public ForgotPasswordController(UserManager<IdentityUser> userManager, IEmailService emailService)
+        public ForgotPasswordController(IEmailRepository emailRepository, IEmailService emailService)
         {
-            _userManager = userManager;
+            _emailRepository = emailRepository;
             _emailService = emailService;
         }
 
@@ -25,7 +31,7 @@ namespace BERecruitmentss.Controllers
         {
             string email = model.Email;
             // Kiểm tra xem email có tồn tại trong cơ sở dữ liệu không
-            var user = await _userManager.FindByEmailAsync(email);
+            var user = await _emailRepository.GetUserByEmailAsync(email);
 
             if (user == null)
             {
@@ -45,11 +51,11 @@ namespace BERecruitmentss.Controllers
             string emailSubject = "Reset Password for " + model.Email;
 
             // Mã hóa mật khẩu tạm thời
-            var passwordHash = new PasswordHasher<IdentityUser>().HashPassword(user, code);
-            user.PasswordHash = passwordHash;
+            var passwordHash = GenerateTemporaryPasswordHash(code);
+            user.Password = passwordHash;
 
             // Cập nhật mật khẩu cho tài khoản
-            await _userManager.UpdateAsync(user);
+            await _emailRepository.UpdateUserAsync(user);
 
             // Gửi email
             await _emailService.SendEmailAsync(fromEmail, model.Email, emailSubject, emailContent);
@@ -63,7 +69,7 @@ namespace BERecruitmentss.Controllers
             string email = model.Email;
             string code = model.Code;
 
-            var user = await _userManager.FindByEmailAsync(email);
+            var user = await _emailRepository.GetUserByEmailAsync(email);
 
             if (user == null)
             {
@@ -71,34 +77,28 @@ namespace BERecruitmentss.Controllers
                 return BadRequest(new { message = "Email không tồn tại." });
             }
 
-            // Kiểm tra mã code nhập vào có trùng khớp với mã code đã lưu trong cơ sở dữ liệu hay không
-            var passwordHasher = new PasswordHasher<IdentityUser>();
-            var result = passwordHasher.VerifyHashedPassword(user, user.PasswordHash, code);
+            // Mã hóa mã code nhập vào bằng MD5
+            string hashedCode = GenerateTemporaryPasswordHash(code);
 
-            if (result != PasswordVerificationResult.Success)
+            // Kiểm tra xem mã hash của mã code có khớp với mã hash trong cơ sở dữ liệu hay không
+            if (user.Password != hashedCode)
             {
                 Console.WriteLine($"Mã code không hợp lệ cho email: {email}");
                 return BadRequest(new { message = "Mã code không hợp lệ." });
             }
 
             // Xóa mật khẩu tạm thời
-            user.PasswordHash = null;
-            await _userManager.UpdateAsync(user);
+            user.Password = null;
+            await _emailRepository.UpdateUserAsync(user);
 
             return Ok(new { message = "Xác nhận mã code thành công." });
         }
 
 
-        public class ConfirmCodeModel
-        {
-            public string Email { get; set; }
-            public string Code { get; set; }
-        }
-
         [HttpPost("resetpassword")]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordModel model)
         {
-            var user = await _userManager.FindByEmailAsync(model.Email);
+            var user = await _emailRepository.GetUserByEmailAsync(model.Email);
 
             if (user == null)
             {
@@ -107,22 +107,14 @@ namespace BERecruitmentss.Controllers
             }
 
             // Đặt lại mật khẩu mới cho người dùng
-            var newPasswordHash = new PasswordHasher<IdentityUser>().HashPassword(user, model.NewPassword);
-            user.PasswordHash = newPasswordHash;
+            var newPasswordHash = GenerateTemporaryPasswordHash(model.NewPassword);
+            user.Password = newPasswordHash;
 
             // Cập nhật mật khẩu cho tài khoản
-            await _userManager.UpdateAsync(user);
+            await _emailRepository.UpdateUserAsync(user);
 
             return Ok(new { message = "Đặt lại mật khẩu thành công." });
         }
-
-        public class ResetPasswordModel
-        {
-            public string Email { get; set; }
-            public string NewPassword { get; set; }
-        }
-
-
 
         private string GenerateResetToken()
         {
@@ -130,10 +122,6 @@ namespace BERecruitmentss.Controllers
             return Guid.NewGuid().ToString();
         }
 
-        public class ForgotPasswordModel
-        {
-            public string Email { get; set; }
-        }
         private string GenerateRandomCode()
         {
             Random random = new Random();
@@ -141,5 +129,43 @@ namespace BERecruitmentss.Controllers
             return code.ToString();
         }
 
+        private string GenerateTemporaryPasswordHash(string password)
+        {
+            // Tạo một đối tượng MD5 để tính toán mã hash
+            using (MD5 md5 = MD5.Create())
+            {
+                // Chuyển đổi mật khẩu thành một mảng byte
+                byte[] inputBytes = Encoding.UTF8.GetBytes(password);
+
+                // Tính toán mã hash
+                byte[] hashBytes = md5.ComputeHash(inputBytes);
+
+                // Chuyển đổi mã hash thành một chuỗi hexa
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < hashBytes.Length; i++)
+                {
+                    sb.Append(hashBytes[i].ToString("x2"));
+                }
+
+                return sb.ToString();
+            }
+        }
+
+        public class ForgotPasswordModel
+        {
+            public string Email { get; set; }
+        }
+
+        public class ConfirmCodeModel
+        {
+            public string Email { get; set; }
+            public string Code { get; set; }
+        }
+
+        public class ResetPasswordModel
+        {
+            public string Email { get; set; }
+            public string NewPassword { get; set; }
+        }
     }
 }

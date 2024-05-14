@@ -1,5 +1,6 @@
 ﻿using BERecruitmentss.Data;
 using BERecruitmentss.Repository;
+using BERecruitmentss.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -33,8 +34,8 @@ namespace BERecruitmentss
             builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
             //builder.Services.AddScoped<IProductRepository, ProductRepository>();
             //builder.Services.AddScoped<IBillRepository, BillRepository>();
-            
-            
+
+            builder.Services.AddScoped<IEmailRepository, EmailRespository>();
             builder.Services.AddScoped<IStaffRepository, StaffRepository>();
             builder.Services.AddScoped<IVancanciesRepository, VancanciesRepository>();
             builder.Services.AddScoped<IRecruitmentApplicantRepository, RecruitmentApplicantRepository>();
@@ -70,6 +71,7 @@ namespace BERecruitmentss
                                .AllowAnyHeader();
                     });
             });
+            builder.Services.AddTransient<IEmailService, MailKitEmailService>();
             var app = builder.Build();
           
             // Configure the HTTP request pipeline.
