@@ -101,11 +101,11 @@ namespace BERecruitmentss.Data
             }
             if (this.RecruitmentApplicant.Count() <= 0)
             {
-                var ra1 = new RecruitmentApplicant() { DateStart = new DateTime(2024, 5, 15), EndDate = new DateTime(2024, 6, 15), Status = 1, CandidateId = 1, RecruitmentID = 1 };
-                var ra2 = new RecruitmentApplicant() { DateStart = new DateTime(2024, 6, 20), EndDate = new DateTime(2024, 7, 20), Status = 2, CandidateId = 2, RecruitmentID = 2 };
-                var ra3 = new RecruitmentApplicant() { DateStart = new DateTime(2024, 7, 25), EndDate = new DateTime(2024, 8, 25), Status = 1, CandidateId = 3, RecruitmentID = 3 };
-                var ra4 = new RecruitmentApplicant() { DateStart = new DateTime(2024, 8, 10), EndDate = new DateTime(2024, 9, 10), Status = 2, CandidateId = 4, RecruitmentID = 4 };
-                var ra5 = new RecruitmentApplicant() { DateStart = new DateTime(2024, 9, 30), EndDate = new DateTime(2024, 10, 30), Status = 1, CandidateId = 5, RecruitmentID = 5 };
+                var ra1 = new RecruitmentApplicant() { DateStart = new DateTime(2024, 5, 15), EndDate = new DateTime(2024, 6, 15), Status = 1, CandidateId = 1, VacanciesId = 1 };
+                var ra2 = new RecruitmentApplicant() { DateStart = new DateTime(2024, 6, 20), EndDate = new DateTime(2024, 7, 20), Status = 2, CandidateId = 2, VacanciesId = 2 };
+                var ra3 = new RecruitmentApplicant() { DateStart = new DateTime(2024, 7, 25), EndDate = new DateTime(2024, 8, 25), Status = 1, CandidateId = 3, VacanciesId = 3 };
+                var ra4 = new RecruitmentApplicant() { DateStart = new DateTime(2024, 8, 10), EndDate = new DateTime(2024, 9, 10), Status = 2, CandidateId = 4, VacanciesId = 4 };
+                var ra5 = new RecruitmentApplicant() { DateStart = new DateTime(2024, 9, 30), EndDate = new DateTime(2024, 10, 30), Status = 1, CandidateId = 5, VacanciesId = 5 };
                 this.RecruitmentApplicant.Add(ra1);
                 this.RecruitmentApplicant.Add(ra2);
                 this.RecruitmentApplicant.Add(ra3);

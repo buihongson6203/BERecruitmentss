@@ -40,7 +40,9 @@ namespace BERecruitmentss.Controllers
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.Name, user.StaffName)
+                    new Claim(ClaimTypes.Name, user.StaffName),
+                      new Claim("user_id", user.Id.ToString()),
+                    new Claim("role", user.Role.ToString()),
                     // Thêm các claim khác tùy ý
                 }),
                 Expires = DateTime.UtcNow.AddHours(1),
