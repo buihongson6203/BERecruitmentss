@@ -39,12 +39,21 @@ namespace BERecruitmentss.Controllers
         }
 
 
-        [HttpGet("{id}")]
+        [HttpGet("by-id/{id}")]
         // [Authorize(Roles = "ADMIN,SUBADMIN,CUSTOMER")]
 
         public async Task<ActionResult<T>> GetById(int id)
         {
             var result = await _repository.GetById(id);
+            return Ok(result);
+        }
+
+        [HttpGet("by-email/{email}")]
+        // [Authorize(Roles = "ADMIN,SUBADMIN,CUSTOMER")]
+
+        public async Task<ActionResult<T>> GetByEmail(string email)
+        {
+            var result = await _repository.GetByEmail(email);
             return Ok(result);
         }
 

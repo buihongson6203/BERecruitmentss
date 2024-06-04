@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BERecruitmentss.Migrations
 {
     /// <inheritdoc />
-    public partial class initDB : Migration
+    public partial class initDb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -59,6 +59,7 @@ namespace BERecruitmentss.Migrations
                     CandidateCode = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DateCreated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Cv = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Status = table.Column<int>(type: "int", nullable: true),
                     StartedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     StartedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -81,8 +82,8 @@ namespace BERecruitmentss.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     EmployeeCode = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    StaffName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    StaffName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Role = table.Column<int>(type: "int", nullable: true),
                     Email = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     StartedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -273,7 +274,7 @@ namespace BERecruitmentss.Migrations
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Status = table.Column<int>(type: "int", nullable: true),
                     CandidateId = table.Column<int>(type: "int", nullable: true),
-                    RecruitmentID = table.Column<int>(type: "int", nullable: true),
+                    VacanciesId = table.Column<int>(type: "int", nullable: true),
                     StartedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     StartedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     EndedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -292,8 +293,8 @@ namespace BERecruitmentss.Migrations
                         principalTable: "Candidate",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_RecruitmentApplicant_Vacancies_RecruitmentID",
-                        column: x => x.RecruitmentID,
+                        name: "FK_RecruitmentApplicant_Vacancies_VacanciesId",
+                        column: x => x.VacanciesId,
                         principalTable: "Vacancies",
                         principalColumn: "Id");
                 });
@@ -350,9 +351,9 @@ namespace BERecruitmentss.Migrations
                 column: "CandidateId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RecruitmentApplicant_RecruitmentID",
+                name: "IX_RecruitmentApplicant_VacanciesId",
                 table: "RecruitmentApplicant",
-                column: "RecruitmentID");
+                column: "VacanciesId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Staff_Email",

@@ -20,6 +20,7 @@ namespace BERecruitmentss.Repository
         Task<List<T>> GetAll(int index = 1, int size = 1);
         Task<List<T>> GetAllNoPagAndFilter();
         Task<T> GetById(int id);
+        Task<T> GetByEmail(string email);
         Task<T> Create(T entity);
         Task<T> Update(T entity);
         Task<T> Delete(int id);
@@ -89,6 +90,12 @@ namespace BERecruitmentss.Repository
         public async Task<T> GetById(int id)
         {
             var result = await _dbSet.FindAsync(id);
+            return result;
+        }
+
+        public async Task<T> GetByEmail(string email)
+        {
+            var result = await _dbSet.FirstOrDefaultAsync(entity => EF.Property<string>(entity, "Email") == email);
             return result;
         }
 

@@ -22,11 +22,11 @@ namespace BERecruitmentss.Controllers
         [HttpPost("login")]
         public IActionResult Login(LoginRequest model)
         {
-            var user = _dbContext.Staff.FirstOrDefault(u => u.StaffName == model.Username);
+            var user = _dbContext.Staff.FirstOrDefault(u => u.Email == model.Email);
 
             if (user == null)
             {
-                return BadRequest("Invalid username or password");
+                return BadRequest("Invalid email or password");
             }
 
             if (user.Password != model.Password)

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BERecruitmentss.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240513184508_initDB")]
-    partial class initDB
+    [Migration("20240530152440_initDb")]
+    partial class initDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -35,6 +35,9 @@ namespace BERecruitmentss.Migrations
 
                     b.Property<string>("CandidateCode")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Cv")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("DateCreated")
                         .HasColumnType("datetime2");
@@ -107,9 +110,6 @@ namespace BERecruitmentss.Migrations
                     b.Property<bool?>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("RecruitmentID")
-                        .HasColumnType("int");
-
                     b.Property<string>("StartedBy")
                         .HasColumnType("nvarchar(max)");
 
@@ -125,11 +125,14 @@ namespace BERecruitmentss.Migrations
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("VacanciesId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CandidateId");
 
-                    b.HasIndex("RecruitmentID");
+                    b.HasIndex("VacanciesId");
 
                     b.ToTable("RecruitmentApplicant");
                 });
@@ -162,14 +165,12 @@ namespace BERecruitmentss.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Password")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("Role")
                         .HasColumnType("int");
 
                     b.Property<string>("StaffName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("StartedBy")
@@ -525,7 +526,7 @@ namespace BERecruitmentss.Migrations
 
                     b.HasOne("BERecruitmentss.Models.Vacancies", "Vacancies")
                         .WithMany("RecruitmentApplicant")
-                        .HasForeignKey("RecruitmentID");
+                        .HasForeignKey("VacanciesId");
 
                     b.Navigation("Candidate");
 
