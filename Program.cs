@@ -73,7 +73,23 @@ namespace BERecruitmentss
             });
             builder.Services.AddTransient<IEmailService, MailKitEmailService>();
             var app = builder.Build();
-          
+            // Seed Data
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                try
+                {
+                    var context = services.GetRequiredService<ApplicationDbContext>();
+                    var seedData = new SeedData(context);
+                    seedData.Initialize();
+                }
+                catch (Exception ex)
+                {
+                    var logger = services.GetRequiredService<ILogger<Program>>();
+                    logger.LogError(ex, "An error occurred seeding the DB.");
+                }
+            }
+
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {

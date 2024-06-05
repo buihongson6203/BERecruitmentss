@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace BERecruitmentss.Controllers
@@ -26,10 +27,12 @@ namespace BERecruitmentss.Controllers
 
             if (user == null)
             {
-                return BadRequest("Invalid email or password");
+                return BadRequest("Invalid username or password");
             }
 
-            if (user.Password != model.Password)
+            // Mã hóa mật khẩu nhập vào bằng MD5 để so sánh
+            var hashedPassword = ComputeMD5Hash(model.Password);
+            if (user.Password != hashedPassword)
             {
                 return Unauthorized();
             }
@@ -41,7 +44,7 @@ namespace BERecruitmentss.Controllers
                 Subject = new ClaimsIdentity(new Claim[]
                 {
                     new Claim(ClaimTypes.Name, user.StaffName),
-                      new Claim("user_id", user.Id.ToString()),
+                    new Claim("user_id", user.Id.ToString()),
                     new Claim("role", user.Role.ToString()),
                     // Thêm các claim khác tùy ý
                 }),
@@ -52,6 +55,20 @@ namespace BERecruitmentss.Controllers
             var tokenString = tokenHandler.WriteToken(token);
 
             return Ok(new { Token = tokenString });
+        }
+
+        private string ComputeMD5Hash(string input)
+        {
+            using (MD5 md5 = MD5.Create())
+            {
+                byte[] data = md5.ComputeHash(Encoding.UTF8.GetBytes(input));
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < data.Length; i++)
+                {
+                    sb.Append(data[i].ToString("x2"));
+                }
+                return sb.ToString();
+            }
         }
     }
 }
