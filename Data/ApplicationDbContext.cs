@@ -86,11 +86,11 @@ namespace BERecruitmentss.Data
             }
             if (this.Candidate.Count() <= 0)
             {
-                var c1 = new Candidate() { CandidateCode = "C1001", Name = "Candidate 1", DateCreated = new DateTime(1990, 5, 15), Status = 1 };
-                var c2 = new Candidate() { CandidateCode = "C1002", Name = "Candidate 2", DateCreated = new DateTime(1985, 10, 20), Status = 2 };
-                var c3 = new Candidate() { CandidateCode = "C1003", Name = "Candidate 3", DateCreated = new DateTime(1995, 3, 25), Status = 1 };
-                var c4 = new Candidate() { CandidateCode = "C1004", Name = "Candidate 4", DateCreated = new DateTime(1980, 7, 10), Status = 2 };
-                var c5 = new Candidate() { CandidateCode = "C1005", Name = "Candidate 5", DateCreated = new DateTime(1992, 11, 30), Status = 1 };
+                var c1 = new Candidate() { CandidateCode = "C1001", Name = "Candidate 1",Email="thao123@gmail.com",Phone="0999898989", DateCreated = new DateTime(1990, 5, 15), Status = 1 };
+                var c2 = new Candidate() { CandidateCode = "C1002", Name = "Candidate 2", Email = "thao1223@gmail.com", Phone = "0999898989", DateCreated = new DateTime(1985, 10, 20), Status = 2 };
+                var c3 = new Candidate() { CandidateCode = "C1003", Name = "Candidate 3", Email = "thao1234@gmail.com", Phone = "0999898989", DateCreated = new DateTime(1995, 3, 25), Status = 1 };
+                var c4 = new Candidate() { CandidateCode = "C1004", Name = "Candidate 4", Email = "thao1231@gmail.com", Phone = "0999898989", DateCreated = new DateTime(1980, 7, 10), Status = 2 };
+                var c5 = new Candidate() { CandidateCode = "C1005", Name = "Candidate 5", Email = "thao1232@gmail.com", Phone = "0999898989", DateCreated = new DateTime(1992, 11, 30), Status = 1 };
                 this.Candidate.Add(c1);
                 this.Candidate.Add(c2);
                 this.Candidate.Add(c3);

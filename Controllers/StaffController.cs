@@ -15,5 +15,27 @@ namespace BERecruitmentss.Controllers
         {
             _staffRepository = stafflRepository;
         }
+        [HttpPost("Createaa")]
+        public async Task<IActionResult> Create([FromBody] Staff staff)
+        {
+            try
+            {
+                if (staff == null)
+                {
+                    return BadRequest("Candidate object is null");
+                }
+
+                staff.EmployeeCode = await _staffRepository.GenerateUniqueCodeAsync();
+
+                _staffRepository.Add(staff);
+                await _staffRepository.SaveChangesAsync();
+
+                return CreatedAtAction(nameof(Create), new { id = staff.Id }, staff);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex}");
+            }
+        }
     }
 }

@@ -39,8 +39,8 @@ namespace BERecruitmentss
             builder.Services.AddScoped<IStaffRepository, StaffRepository>();
             builder.Services.AddScoped<IVancanciesRepository, VancanciesRepository>();
             builder.Services.AddScoped<IRecruitmentApplicantRepository, RecruitmentApplicantRepository>();
-
             builder.Services.AddScoped<ICandidateRepository, CandidateRepository>();
+
             builder.Services.AddAuthentication(option =>
             {
                 option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

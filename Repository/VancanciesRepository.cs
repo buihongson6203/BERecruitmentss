@@ -8,6 +8,9 @@ namespace BERecruitmentss.Repository
     {
         Task<Vacancies> GetByIdAsync(int id);
         Task<Vacancies> GetVacancyByRecruitmentIDAsync(int recruitmentID);
+        Task<string> GenerateUniqueCodeAsync();
+        void Add(Vacancies vacancies);
+        Task SaveChangesAsync();
     }
 
     public class VancanciesRepository : BaseRepository<Vacancies>, IVancanciesRepository
@@ -26,6 +29,39 @@ namespace BERecruitmentss.Repository
             return await _context.Vacancies
                 .Include(v => v.RecruitmentApplicant)
                 .FirstOrDefaultAsync(v => v.Id == recruitmentID);
+        }
+        public void Add(Vacancies vacancies)
+        {
+            _context.Vacancies.Add(vacancies);
+        }
+
+        public async Task SaveChangesAsync()
+        {
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<string> GenerateUniqueCodeAsync()
+        {
+            int newCodeNumber = 1;
+
+            // Lặp cho đến khi tìm được mã không trùng lặp
+            while (true)
+            {
+                // Tạo mã mới
+                string newCode = $"D{newCodeNumber:D5}";
+
+                // Kiểm tra xem mã đã tồn tại trong cơ sở dữ liệu chưa
+                bool codeExists = await _context.Vacancies.AnyAsync(c => c.RecruitmentCode == newCode);
+
+                // Nếu mã chưa tồn tại, trả về mã mới
+                if (!codeExists)
+                {
+                    return newCode;
+                }
+
+
+                newCodeNumber++;
+            }
         }
     }
 }

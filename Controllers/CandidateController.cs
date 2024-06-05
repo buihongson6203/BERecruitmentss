@@ -52,6 +52,28 @@ namespace BERecruitmentss.Controllers
                 return StatusCode(500, $"Internal server error: {ex}");
             }
         }
+        [HttpPost("Createaaa")]
+        public async Task<IActionResult> Create([FromBody] Candidate candidate)
+        {
+            try
+            {
+                if (candidate == null)
+                {
+                    return BadRequest("Candidate object is null");
+                }
 
+                candidate.CandidateCode = await _candidateRepository.GenerateUniqueCodeAsync();
+                candidate.DateCreated = DateTime.Now;
+
+                _candidateRepository.Add(candidate);
+                await _candidateRepository.SaveChangesAsync();
+
+                return CreatedAtAction(nameof(Create), new { id = candidate.Id }, candidate);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex}");
+            }
+        }
     }
 }
