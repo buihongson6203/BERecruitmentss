@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BERecruitmentss.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240530152440_initDb")]
+    [Migration("20240605150834_initDb")]
     partial class initDb
     {
         /// <inheritdoc />
@@ -48,6 +48,9 @@ namespace BERecruitmentss.Migrations
                     b.Property<string>("DeletedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime?>("EndedDate")
                         .HasColumnType("datetime2");
 
@@ -55,6 +58,10 @@ namespace BERecruitmentss.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("StartedBy")
