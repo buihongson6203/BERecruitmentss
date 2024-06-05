@@ -1,5 +1,6 @@
 ﻿using BERecruitmentss.Common;
 using BERecruitmentss.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -56,7 +57,27 @@ namespace BERecruitmentss.Controllers
 
             return Ok(new { Token = tokenString });
         }
+        [HttpPost("change-password")]
+        public IActionResult ChangePassword(ChangePasswordRequest model)
+        {
+            var user = _dbContext.Staff.FirstOrDefault(u => u.Email == model.Email);
 
+            if (user == null)
+            {
+                return BadRequest("User not found");
+            }
+
+            var hashedOldPassword = ComputeMD5Hash(model.OldPassword);
+            if (user.Password != hashedOldPassword)
+            {
+                return BadRequest("Old password is incorrect");
+            }
+
+            user.Password = ComputeMD5Hash(model.NewPassword);
+            _dbContext.SaveChanges();
+
+            return Ok("Password changed successfully");
+        }
         private string ComputeMD5Hash(string input)
         {
             using (MD5 md5 = MD5.Create())
