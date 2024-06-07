@@ -44,16 +44,16 @@ namespace BERecruitmentss.Repository
         {
             int newCodeNumber = 1;
 
-            // Lặp cho đến khi tìm được mã không trùng lặp
+           
             while (true)
             {
-                // Tạo mã mới
+                
                 string newCode = $"D{newCodeNumber:D5}";
 
-                // Kiểm tra xem mã đã tồn tại trong cơ sở dữ liệu chưa
+              
                 bool codeExists = await _context.Vacancies.AnyAsync(c => c.RecruitmentCode == newCode);
 
-                // Nếu mã chưa tồn tại, trả về mã mới
+               
                 if (!codeExists)
                 {
                     return newCode;

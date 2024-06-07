@@ -15,45 +15,8 @@ namespace BERecruitmentss.Controllers
         {
             _candidateRepository = candidateRepository;
         }
-        [HttpPost("UploadImage")]
-        public async Task<IActionResult> UploadImage(IFormFile image)
-        {
-            try
-            {
-                if (image == null || image.Length == 0)
-                {
-                    return BadRequest("No image uploaded");
-                }
-                // Tạo thư mục lưu ảnh nếu chưa tồn tại
-                var uploadDir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Cv");
-                if (!Directory.Exists(uploadDir))
-                {
-                    Directory.CreateDirectory(uploadDir);
-                }
-
-                // Tạo tên file duy nhất
-                var fileName = $"{Guid.NewGuid()}_{image.FileName}";
-
-                // Đường dẫn lưu trữ
-                var filePath = Path.Combine(uploadDir, fileName);
-
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
-                {
-                    await image.CopyToAsync(fileStream);
-                }
-
-                // Trả về đường dẫn ảnh
-                var imageUrl = $"{Request.Scheme}://{Request.Host}/images/{fileName}";
-
-                return Ok(new { imageUrl });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex}");
-            }
-        }
-        [HttpPost("Createaaa")]
-        public async Task<IActionResult> Create([FromBody] Candidate candidate)
+        [HttpPost("CreateUploadCV")]
+        public async Task<IActionResult> CreateCandidate([FromForm] Candidate candidate, IFormFile cv)
         {
             try
             {
@@ -62,13 +25,34 @@ namespace BERecruitmentss.Controllers
                     return BadRequest("Candidate object is null");
                 }
 
+                // Xử lý tệp tin CV
+                if (cv != null && cv.Length > 0)
+                {
+                    var uploadDir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Cv");
+                    if (!Directory.Exists(uploadDir))
+                    {
+                        Directory.CreateDirectory(uploadDir);
+                    }
+
+                    var fileName = $"{Guid.NewGuid()}_{cv.FileName}";
+                    var filePath = Path.Combine(uploadDir, fileName);
+
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await cv.CopyToAsync(fileStream);
+                    }
+
+                    candidate.Cv = $"{Request.Scheme}://{Request.Host}/Cv/{fileName}";
+                }
+
+                // Tạo mã ứng viên duy nhất
                 candidate.CandidateCode = await _candidateRepository.GenerateUniqueCodeAsync();
                 candidate.DateCreated = DateTime.Now;
 
                 _candidateRepository.Add(candidate);
                 await _candidateRepository.SaveChangesAsync();
 
-                return CreatedAtAction(nameof(Create), new { id = candidate.Id }, candidate);
+                return CreatedAtAction(nameof(CreateCandidate), new { id = candidate.Id }, candidate);
             }
             catch (Exception ex)
             {
