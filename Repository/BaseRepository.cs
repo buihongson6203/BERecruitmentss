@@ -85,6 +85,7 @@ namespace BERecruitmentss.Repository
         {
             var result = await _dbSet.ToListAsync();
             return result;
+
         }
 
         public async Task<T> GetById(int id)

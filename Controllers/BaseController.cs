@@ -79,7 +79,6 @@ namespace BERecruitmentss.Controllers
 
         [HttpDelete]
         // [Authorize(Roles = "ADMIN,SUBADMIN")]
-
         public async Task<ActionResult<T>> Delete(int id)
         {
             var result = await _repository.Delete(id);
