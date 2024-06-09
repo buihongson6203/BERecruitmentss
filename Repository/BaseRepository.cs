@@ -74,18 +74,24 @@ namespace BERecruitmentss.Repository
             return null;
         }
 
-        public async Task<List<T>> GetAll(int index = 1, int size = 1)
+        public async Task<List<T>> GetAll(int index = 1, int size = 10)
         {
-            var result = _dbSet.AsQueryable();
-            result = result.Skip((index - 1) * size).Take(size);
+            var result = _dbSet.AsQueryable()
+                               .Where(e => EF.Property<bool?>(e, "IsDeleted") == false || EF.Property<bool?>(e, "IsDeleted") == null)
+                               .Skip((index - 1) * size)
+                               .Take(size);
             return await result.ToListAsync();
         }
 
+
         public async Task<List<T>> GetAllNoPagAndFilter()
         {
-            var result = await _dbSet.ToListAsync();
+            var result = await _dbSet
+                                .Where(e => EF.Property<bool?>(e, "IsDeleted") == false || EF.Property<bool?>(e, "IsDeleted") == null)
+                                .ToListAsync();
             return result;
         }
+
 
         public async Task<T> GetById(int id)
         {
