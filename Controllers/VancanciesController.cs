@@ -14,5 +14,27 @@ namespace BERecruitmentss.Controllers
         {
             _vancanciesRepository = vancanciesRepository;
         }
+        [HttpPost("Createaa")]
+        public async Task<IActionResult> Create([FromBody] Vacancies vacancies)
+        {
+            try
+            {
+                if (vacancies == null)
+                {
+                    return BadRequest("Candidate object is null");
+                }
+
+                vacancies.RecruitmentCode = await _vancanciesRepository.GenerateUniqueCodeAsync();
+         
+                _vancanciesRepository.Add(vacancies);
+                await _vancanciesRepository.SaveChangesAsync();
+
+                return CreatedAtAction(nameof(Create), new { id = vacancies.Id }, vacancies);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex}");
+            }
+        }
     }
 }
