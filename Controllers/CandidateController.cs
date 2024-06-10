@@ -1,7 +1,10 @@
-﻿using BERecruitmentss.Models;
+﻿using BERecruitmentss.Common;
+using BERecruitmentss.Data;
+using BERecruitmentss.Models;
 using BERecruitmentss.Repository;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace BERecruitmentss.Controllers
 {
@@ -10,10 +13,12 @@ namespace BERecruitmentss.Controllers
     public class CandidateController : BaseController<Candidate>
     {
         private ICandidateRepository _candidateRepository;
+        private readonly ApplicationDbContext _context;
 
-        public CandidateController(IBaseRepository<Candidate> repository, ICandidateRepository candidateRepository) : base(repository)
+        public CandidateController(IBaseRepository<Candidate> repository, ICandidateRepository candidateRepository, ApplicationDbContext context) : base(repository)
         {
             _candidateRepository = candidateRepository;
+            _context = context;
         }
         [HttpPost("UploadImage")]
         public async Task<IActionResult> UploadImage(IFormFile image)
@@ -75,5 +80,47 @@ namespace BERecruitmentss.Controllers
                 return StatusCode(500, $"Internal server error: {ex}");
             }
         }
+        [HttpGet("GetAllCandidates")]
+        public async Task<IActionResult> GetAllCandidates()
+        {
+            try
+            {
+                var candidates = from candidate in _context.Candidate
+                                 join recruitmentApplicant in _context.RecruitmentApplicant
+                                     on candidate.Id equals recruitmentApplicant.CandidateId into ca
+                from recruitmentApplicant in ca.DefaultIfEmpty()
+                                 join vacancies in _context.Vacancies
+                                     on recruitmentApplicant.VacanciesId equals vacancies.Id into rv
+                                 from vacancies in rv.DefaultIfEmpty()
+                                 select new CandidateDto
+                                 {
+                                     CandidateId = candidate.Id,
+                                     CandidateCode = candidate.CandidateCode,
+                                     Name = candidate.Name,
+                                     Email = candidate.Email,
+                                     Phone = candidate.Phone,
+                                     DateCreated = candidate.DateCreated,
+                                     Cv = candidate.Cv,
+                                     Status = candidate.Status,
+                                     RecruitmentApplicantId = recruitmentApplicant.Id,
+                                     RecruitmentApplicantDateStart = recruitmentApplicant.DateStart,
+                                     RecruitmentApplicantEndDate = recruitmentApplicant.EndDate,
+                                     RecruitmentApplicantStatus = recruitmentApplicant.Status,
+                                     VacanciesRecruitmentCode = vacancies.RecruitmentCode,
+                                     VacanciesId = vacancies.Id,
+                                     VacanciesTitle = vacancies.Title,
+                                     VacanciesDescription = vacancies.Description,
+                                     VacanciesQuantity = vacancies.Quantity,
+                                     VacanciesRecruitmentClosingDate = vacancies.RecruitmentClosingDate
+                                 };
+
+                return Ok(await candidates.ToListAsync());
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
     }
 }
