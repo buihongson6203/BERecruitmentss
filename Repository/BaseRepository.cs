@@ -22,13 +22,13 @@ namespace BERecruitmentss.Repository
         Task<T> GetById(int id);
         Task<T> GetByEmail(string email);
         Task<T> Create(T entity);
-        Task<T> Update(T entity);
+        Task<T> Update(int id, T entity);
         Task<T> Delete(int id);
         Task<List<T>> SortAndPagination(string colName = "Id", bool isAsc = true, int index = 1, int size = 3);
         Task<List<T>> FullFilter_1(FiterRequestDTO requestDTO);
     }
     public class BaseRepository<T> : IBaseRepository<T> where T : Base
-    {
+    {   
         protected ApplicationDbContext _context;
         protected DbSet<T> _dbSet;
         protected readonly IHttpContextAccessor _httpContextAccessor;
@@ -105,16 +105,37 @@ namespace BERecruitmentss.Repository
             return result;
         }
 
-        public async Task<T> Update(T entity)
+        public async Task<T> Update(int id, T entity)
         {
             if (entity != null)
             {
-                entity.UpdatedAt = DateTime.Now;
-                entity.UpdatedBy = GetCurrentUserId();
+ 
+                var existingEntity = await _dbSet.FindAsync(id);
+                if (existingEntity == null)
+                {
+                    return null; // Trả về null nếu không tìm thấy đối tượng
+                }
 
-                _dbSet.Update(entity);
+                foreach (var property in typeof(T).GetProperties())
+                {
+                    if (property.CanWrite && property.Name != "Id") // Bỏ qua thuộc tính Id vì nó là khóa chính và không thể cập nhật
+                    {
+                        var valueFromBody = entity.GetType().GetProperty(property.Name)?.GetValue(entity);
+                        if (valueFromBody != null)
+                        {
+                            property.SetValue(existingEntity, valueFromBody);
+                        }
+                    }
+                }
+
+                // Cập nhật ngày và người cập nhật
+                existingEntity.UpdatedAt = DateTime.Now;
+                existingEntity.UpdatedBy = GetCurrentUserId();
+
+                // Lưu các thay đổi vào cơ sở dữ liệu
                 await _context.SaveChangesAsync();
-                return entity;
+
+                return existingEntity;
             }
             return null;
         }
