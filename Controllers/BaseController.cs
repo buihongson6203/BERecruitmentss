@@ -73,6 +73,7 @@ namespace BERecruitmentss.Controllers
 
         public async Task<ActionResult<T>> Update(T entity)
         {
+            
             var result = await _repository.Update(entity);
             return Ok(result);
         }

@@ -10,7 +10,7 @@ namespace BERecruitmentss.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
-            //this.SeedData();
+            this.SeedData();
         }
         public virtual DbSet<Staff> Staff { get; set; }
         public virtual DbSet<Vacancies> Vacancies { get; set; }        

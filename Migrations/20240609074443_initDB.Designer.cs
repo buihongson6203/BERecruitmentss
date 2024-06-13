@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BERecruitmentss.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240605150834_initDb")]
-    partial class initDb
+    [Migration("20240609074443_initDB")]
+    partial class initDB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
