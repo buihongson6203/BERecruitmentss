@@ -25,7 +25,6 @@ namespace BERecruitmentss.Controllers
 
 
         }
-
         [HttpPost]
         [Route("Login")]
         public async Task<IActionResult> Login([FromBody] LoginRequestModel model)
@@ -80,7 +79,7 @@ namespace BERecruitmentss.Controllers
             }
             else
             {
-                var newUser = new IdentityUser(model.Username) { Email = model.Email };
+                var newUser = new IdentityUser(model.Username) { Email = model.Email,  };
                 var checker = await _userManager.CreateAsync(newUser, model.Password);
                 if (checker.Succeeded)
                 {

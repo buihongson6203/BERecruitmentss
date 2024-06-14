@@ -15,17 +15,20 @@ namespace BERecruitmentss.Repository
 {
     public interface IBaseRepository<T> where T : Base
     {
+      
+
         Task<List<T>> GetAll(int index = 1, int size = 1);
         Task<List<T>> GetAllNoPagAndFilter();
         Task<T> GetById(int id);
+        Task<T> GetByEmail(string email);
         Task<T> Create(T entity);
-        Task<T> Update(T entity);
+        Task<T> Update(int id, T entity);
         Task<T> Delete(int id);
         Task<List<T>> SortAndPagination(string colName = "Id", bool isAsc = true, int index = 1, int size = 3);
         Task<List<T>> FullFilter_1(FiterRequestDTO requestDTO);
     }
     public class BaseRepository<T> : IBaseRepository<T> where T : Base
-    {
+    {   
         protected ApplicationDbContext _context;
         protected DbSet<T> _dbSet;
         protected readonly IHttpContextAccessor _httpContextAccessor;
@@ -48,14 +51,12 @@ namespace BERecruitmentss.Repository
                 entity.StartedDate = DateTime.Now;
                 entity.StartedBy = GetCurrentUserId();
                 entity.EndedDate = DateTime.Now;
-
                 _dbSet.Add(entity);
                 await _context.SaveChangesAsync();
                 return entity;
             }
             return null;
         }
-
         public async Task<T> Delete(int id)
         {
             var result = await _dbSet.FindAsync(id);
@@ -73,18 +74,24 @@ namespace BERecruitmentss.Repository
             return null;
         }
 
-        public async Task<List<T>> GetAll(int index = 1, int size = 1)
+        public async Task<List<T>> GetAll(int index = 1, int size = 10)
         {
-            var result = _dbSet.AsQueryable();
-            result = result.Skip((index - 1) * size).Take(size);
+            var result = _dbSet.AsQueryable()
+                               .Where(e => EF.Property<bool?>(e, "IsDeleted") == false || EF.Property<bool?>(e, "IsDeleted") == null)
+                               .Skip((index - 1) * size)
+                               .Take(size);
             return await result.ToListAsync();
         }
 
+
         public async Task<List<T>> GetAllNoPagAndFilter()
         {
-            var result = await _dbSet.ToListAsync();
+            var result = await _dbSet
+                                .Where(e => EF.Property<bool?>(e, "IsDeleted") == false || EF.Property<bool?>(e, "IsDeleted") == null)
+                                .ToListAsync();
             return result;
         }
+
 
         public async Task<T> GetById(int id)
         {
@@ -92,16 +99,43 @@ namespace BERecruitmentss.Repository
             return result;
         }
 
-        public async Task<T> Update(T entity)
+        public async Task<T> GetByEmail(string email)
+        {
+            var result = await _dbSet.FirstOrDefaultAsync(entity => EF.Property<string>(entity, "Email") == email);
+            return result;
+        }
+
+        public async Task<T> Update(int id, T entity)
         {
             if (entity != null)
             {
-                entity.UpdatedAt = DateTime.Now;
-                entity.UpdatedBy = GetCurrentUserId();
+ 
+                var existingEntity = await _dbSet.FindAsync(id);
+                if (existingEntity == null)
+                {
+                    return null; // Trả về null nếu không tìm thấy đối tượng
+                }
 
-                _dbSet.Update(entity);
+                foreach (var property in typeof(T).GetProperties())
+                {
+                    if (property.CanWrite && property.Name != "Id") // Bỏ qua thuộc tính Id vì nó là khóa chính và không thể cập nhật
+                    {
+                        var valueFromBody = entity.GetType().GetProperty(property.Name)?.GetValue(entity);
+                        if (valueFromBody != null)
+                        {
+                            property.SetValue(existingEntity, valueFromBody);
+                        }
+                    }
+                }
+
+                // Cập nhật ngày và người cập nhật
+                existingEntity.UpdatedAt = DateTime.Now;
+                existingEntity.UpdatedBy = GetCurrentUserId();
+
+                // Lưu các thay đổi vào cơ sở dữ liệu
                 await _context.SaveChangesAsync();
-                return entity;
+
+                return existingEntity;
             }
             return null;
         }

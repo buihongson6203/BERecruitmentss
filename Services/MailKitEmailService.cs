@@ -17,7 +17,7 @@ namespace BERecruitmentss.Services
 
             using var client = new SmtpClient();
             await client.ConnectAsync("smtp.gmail.com", 587, SecureSocketOptions.StartTls); // Sử dụng STARTTLS
-            await client.AuthenticateAsync("khanhcr2807@gmail.com", "zvnl uorv fmhv xgwt"); // Thay bằng mật khẩu ứng dụng của bạn
+            await client.AuthenticateAsync("buihongson6203@gmail.com", "kbrk ycoc gmms bpuo");
             await client.SendAsync(message);
             await client.DisconnectAsync(true);
         }
