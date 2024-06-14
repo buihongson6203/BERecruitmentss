@@ -123,6 +123,41 @@ namespace BERecruitmentss.Controllers
             }
         }
 
+        [HttpGet("GetCandidateRAId/{id}")]
+        public async Task<IActionResult> GetCandidateRAId(int id)
+        {
+            try
+            {
+                var candidateData = await (from c in _context.Candidate
+                                           join ra in _context.RecruitmentApplicant
+                                               on c.Id equals ra.CandidateId into ca
+                                           from ra in ca.DefaultIfEmpty()
+                                           join v in _context.Vacancies
+                                               on ra.VacanciesId equals v.Id into rv
+                                           from v in rv.DefaultIfEmpty()
+                                           where c.Id == id && (c.IsDeleted == null || c.IsDeleted == false)
+                                           select new CandidateRADto
+                                           {
+                                               CandidateId = c.Id,
+                                               RecruitmentApplicantId = ra.Id,
+                                               RecruitmentApplicantDateStart = ra.DateStart,
+                                               RecruitmentApplicantEndDate = ra.EndDate,
+                                               RecruitmentApplicantStatus = ra.Status,                                           
+                                           }).FirstOrDefaultAsync();
+
+                if (candidateData == null)
+                {
+                    return NotFound($"Candidate with Id = {id} not found.");
+                }
+
+                return Ok(candidateData);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
 
     }
 }
