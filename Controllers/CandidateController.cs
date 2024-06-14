@@ -88,10 +88,11 @@ namespace BERecruitmentss.Controllers
                 var candidates = from candidate in _context.Candidate
                                  join recruitmentApplicant in _context.RecruitmentApplicant
                                      on candidate.Id equals recruitmentApplicant.CandidateId into ca
-                from recruitmentApplicant in ca.DefaultIfEmpty()
+                                 from recruitmentApplicant in ca.DefaultIfEmpty()
                                  join vacancies in _context.Vacancies
                                      on recruitmentApplicant.VacanciesId equals vacancies.Id into rv
                                  from vacancies in rv.DefaultIfEmpty()
+                                 where candidate.IsDeleted == null || candidate.IsDeleted == false // Thêm điều kiện vào đây
                                  select new CandidateDto
                                  {
                                      CandidateId = candidate.Id,
@@ -121,6 +122,7 @@ namespace BERecruitmentss.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+
 
     }
 }
